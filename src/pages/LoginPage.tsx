@@ -1,6 +1,13 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, Button} from 'react-native';
 
-export const LoginPage = () => {
-  return <View></View>;
+export const LoginPage = ({navigation}) => {
+  return (
+    <View>
+      <Button
+        title="Go to lobby"
+        onPress={() => navigation.navigate('LobbyPage')}
+      />
+    </View>
+  );
 };
