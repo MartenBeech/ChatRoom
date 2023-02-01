@@ -5,7 +5,7 @@ import {ChatRoomCard} from '../components/ChatRoomCard';
 import {ChatRoom} from '../entities/chatRoom';
 import {getChatRooms} from '../firebase/chatRoom';
 
-export const LobbyPage = () => {
+export const LobbyPage = ({navigation}) => {
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
   const isFocused = useIsFocused();
 
@@ -25,6 +25,9 @@ export const LobbyPage = () => {
             <ChatRoomCard
               description={chatRoom.description}
               title={chatRoom.title}
+              onPress={() =>
+                navigation.navigate('ChatRoomPage', {name: chatRoom.id})
+              }
             />
           </View>
         );

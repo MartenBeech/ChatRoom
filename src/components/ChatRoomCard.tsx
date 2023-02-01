@@ -1,14 +1,15 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, Pressable} from 'react-native';
 
 interface Props {
   title: string;
   description: string;
+  onPress?: () => void;
 }
 
 export const ChatRoomCard = (props: Props) => {
   return (
-    <View style={styles.card}>
+    <Pressable style={styles.card} onPress={props.onPress}>
       <View style={styles.row}>
         <View>
           <View>
@@ -24,7 +25,7 @@ export const ChatRoomCard = (props: Props) => {
           />
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

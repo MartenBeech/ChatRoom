@@ -1,6 +1,57 @@
-import React from 'react';
-import {View} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, TextInput, StyleSheet} from 'react-native';
+import {ChatRoom} from '../entities/chatRoom';
+import {getChatRoom} from '../firebase/chatRoom';
 
-export const ChatRoomPage = () => {
-  return <View></View>;
+interface Props {
+  navigation: any;
+  route: any;
+}
+
+export const ChatRoomPage = (props: Props) => {
+  const [state, setState] = useState<ChatRoom>();
+  const [inputText, setInputText] = useState<string>('');
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (isFocused) {
+      getChatRoom(props.route.params.name).then(response => {
+        setState(response);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused]);
+
+  return (
+    <View>
+      {state && (
+        <View>
+          {state.messages.map(message => {
+            return (
+              <View>
+                <Text>{message.messageText}</Text>
+              </View>
+            );
+          })}
+        </View>
+      )}
+      <TextInput
+        placeholder="Title"
+        style={styles.textInput}
+        value={inputText}
+        onChangeText={setInputText}
+      />
+    </View>
+  );
 };
+
+const styles = StyleSheet.create({
+  textInput: {
+    height: 40,
+    marginVertical: 12,
+    marginHorizontal: '4%',
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 5,
+  },
+});
