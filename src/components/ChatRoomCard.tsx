@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Image} from 'react-native';
 
 interface Props {
   title: string;
@@ -11,18 +11,17 @@ export const ChatRoomCard = (props: Props) => {
     <View style={styles.card}>
       <View style={styles.row}>
         <View>
-          <View style={styles.justifyCenter}>
+          <View>
             <Text style={styles.titleFont}>{props.title}</Text>
           </View>
           <View style={styles.topMargin} />
           <Text style={styles.descriptionFont}>{props.description}</Text>
         </View>
         <View style={styles.chevronIcon}>
-          <Text>tester</Text>
-          {/* <Image
+          <Image
             style={styles.chevronIcon}
             source={require('../images/Chevron.png')}
-          /> */}
+          />
         </View>
       </View>
     </View>
@@ -36,12 +35,10 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     width: '80%',
   },
-  justifyCenter: {
-    alignItems: 'center',
-  },
   titleFont: {
     fontSize: 30,
     fontWeight: 'bold',
+    marginHorizontal: 10,
   },
   descriptionFont: {
     fontSize: 20,
@@ -54,9 +51,11 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   chevronIcon: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: 40,
+    width: 40,
+    resizeMode: 'contain',
   },
 });
