@@ -6,7 +6,6 @@ export async function getChatRoom(id: number) {
   let returnValue: ChatRoom | undefined;
   const docRef = doc(db, 'ChatRooms', id.toString());
   const docSnap = await getDoc(docRef);
-
   if (docSnap.exists()) {
     const snapData = docSnap.data();
     returnValue = snapData as ChatRoom;
