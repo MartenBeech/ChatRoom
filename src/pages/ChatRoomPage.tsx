@@ -41,7 +41,6 @@ export const ChatRoomPage = (props: Props) => {
         }
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
 
   useEffect(() => {
@@ -50,7 +49,6 @@ export const ChatRoomPage = (props: Props) => {
         setState({...state, messages: snapshot.messages});
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [snapshot]);
 
   return (
