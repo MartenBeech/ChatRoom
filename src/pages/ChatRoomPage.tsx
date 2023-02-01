@@ -1,4 +1,5 @@
 import {useIsFocused} from '@react-navigation/native';
+import {doc, onSnapshot} from 'firebase/firestore';
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -10,7 +11,8 @@ import {
   Pressable,
 } from 'react-native';
 import {ChatRoom} from '../entities/chatRoom';
-import {getChatRoom} from '../firebase/chatRoom';
+import {getChatRoom, submitMessage} from '../firebase/chatRoom';
+import {db} from '../firebase/config';
 
 interface Props {
   navigation: any;
@@ -20,24 +22,45 @@ interface Props {
 export const ChatRoomPage = (props: Props) => {
   const [state, setState] = useState<ChatRoom>();
   const [inputText, setInputText] = useState<string>('');
+  const [snapshot, setSnapshot] = useState<ChatRoom>();
+
   const isFocused = useIsFocused();
+  const chatRoomId = props.route.params.name as number;
   useEffect(() => {
     if (isFocused) {
-      getChatRoom(props.route.params.name).then(response => {
+      getChatRoom(chatRoomId).then(response => {
         setState(response);
+      });
+
+      const messagesRef = doc(db, 'ChatRooms', chatRoomId.toString());
+      onSnapshot(messagesRef, docSnap => {
+        if (docSnap.exists()) {
+          const snapData = docSnap.data();
+          const chatRoom = snapData as ChatRoom;
+          setSnapshot(chatRoom);
+        }
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
+
+  useEffect(() => {
+    if (snapshot) {
+      if (state) {
+        setState({...state, messages: snapshot.messages});
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [snapshot]);
 
   return (
     <View>
       <ScrollView style={styles.scrollView}>
         {state && (
           <View>
-            {state.messages.map(message => {
+            {state.messages.map((message, index) => {
               return (
-                <View>
+                <View key={`${message}-${index}`}>
                   <Text>{message.messageText}</Text>
                 </View>
               );
@@ -53,7 +76,11 @@ export const ChatRoomPage = (props: Props) => {
           onChangeText={setInputText}
         />
         {inputText ? (
-          <Pressable>
+          <Pressable
+            onPress={async () => {
+              setInputText('');
+              await submitMessage({chatRoomId, text: inputText});
+            }}>
             <Image
               style={styles.chevronIcon}
               source={require('../images/Send.png')}
